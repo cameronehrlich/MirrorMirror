@@ -10,4 +10,8 @@
 
 @interface MMViewController : UIViewController
 
+@property (nonatomic, weak) IBOutlet UIView *previewView;
+- (IBAction)switchCameraAction:(id)sender;
+- (IBAction)scanAction:(id)sender;
+
 @end

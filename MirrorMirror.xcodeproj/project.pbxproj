@@ -24,6 +24,7 @@
 		328F867017F12E76009B498F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 328F864F17F12E75009B498F /* UIKit.framework */; };
 		328F867817F12E76009B498F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 328F867617F12E76009B498F /* InfoPlist.strings */; };
 		328F867A17F12E76009B498F /* MirrorMirrorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 328F867917F12E76009B498F /* MirrorMirrorTests.m */; };
+		32C8E53B17F69DD500327FE3 /* MMSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 32C8E53A17F69DD500327FE3 /* MMSessionManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +60,8 @@
 		328F867517F12E76009B498F /* MirrorMirrorTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MirrorMirrorTests-Info.plist"; sourceTree = "<group>"; };
 		328F867717F12E76009B498F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		328F867917F12E76009B498F /* MirrorMirrorTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MirrorMirrorTests.m; sourceTree = "<group>"; };
+		32C8E53917F69DD500327FE3 /* MMSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMSessionManager.h; sourceTree = "<group>"; };
+		32C8E53A17F69DD500327FE3 /* MMSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMSessionManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +127,8 @@
 				328F866017F12E75009B498F /* Main_iPad.storyboard */,
 				328F866317F12E75009B498F /* MMViewController.h */,
 				328F866417F12E75009B498F /* MMViewController.m */,
+				32C8E53917F69DD500327FE3 /* MMSessionManager.h */,
+				32C8E53A17F69DD500327FE3 /* MMSessionManager.m */,
 				322D7CE517F1955400F26B84 /* border.png */,
 				322D7CE317F148A000F26B84 /* test2.jpg */,
 				328F866617F12E75009B498F /* Images.xcassets */,
@@ -264,6 +269,7 @@
 			files = (
 				328F865C17F12E75009B498F /* MMAppDelegate.m in Sources */,
 				328F866517F12E75009B498F /* MMViewController.m in Sources */,
+				32C8E53B17F69DD500327FE3 /* MMSessionManager.m in Sources */,
 				328F865817F12E75009B498F /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
