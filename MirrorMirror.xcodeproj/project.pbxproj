@@ -7,8 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		322D7CE417F148A000F26B84 /* test2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 322D7CE317F148A000F26B84 /* test2.jpg */; };
-		322D7CE617F1955400F26B84 /* border.png in Resources */ = {isa = PBXBuildFile; fileRef = 322D7CE517F1955400F26B84 /* border.png */; };
+		320752E518C831CB00367806 /* MMResponseGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 320752E418C831CB00367806 /* MMResponseGenerator.m */; };
 		328F864C17F12E75009B498F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 328F864B17F12E75009B498F /* Foundation.framework */; };
 		328F864E17F12E75009B498F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 328F864D17F12E75009B498F /* CoreGraphics.framework */; };
 		328F865017F12E75009B498F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 328F864F17F12E75009B498F /* UIKit.framework */; };
@@ -38,8 +37,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		322D7CE317F148A000F26B84 /* test2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = test2.jpg; sourceTree = "<group>"; };
-		322D7CE517F1955400F26B84 /* border.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = border.png; sourceTree = "<group>"; };
+		320752E318C831CB00367806 /* MMResponseGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMResponseGenerator.h; sourceTree = "<group>"; };
+		320752E418C831CB00367806 /* MMResponseGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMResponseGenerator.m; sourceTree = "<group>"; };
 		328F864817F12E75009B498F /* MirrorMirror.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MirrorMirror.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		328F864B17F12E75009B498F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		328F864D17F12E75009B498F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -127,10 +126,10 @@
 				328F866017F12E75009B498F /* Main_iPad.storyboard */,
 				328F866317F12E75009B498F /* MMViewController.h */,
 				328F866417F12E75009B498F /* MMViewController.m */,
+				320752E318C831CB00367806 /* MMResponseGenerator.h */,
+				320752E418C831CB00367806 /* MMResponseGenerator.m */,
 				32C8E53917F69DD500327FE3 /* MMSessionManager.h */,
 				32C8E53A17F69DD500327FE3 /* MMSessionManager.m */,
-				322D7CE517F1955400F26B84 /* border.png */,
-				322D7CE317F148A000F26B84 /* test2.jpg */,
 				328F866617F12E75009B498F /* Images.xcassets */,
 				328F865217F12E75009B498F /* Supporting Files */,
 			);
@@ -214,6 +213,9 @@
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Cameron Ehrlich";
 				TargetAttributes = {
+					328F864717F12E75009B498F = {
+						DevelopmentTeam = 842K77RHSG;
+					};
 					328F866B17F12E75009B498F = {
 						TestTargetID = 328F864717F12E75009B498F;
 					};
@@ -243,8 +245,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				322D7CE417F148A000F26B84 /* test2.jpg in Resources */,
-				322D7CE617F1955400F26B84 /* border.png in Resources */,
 				328F866217F12E75009B498F /* Main_iPad.storyboard in Resources */,
 				328F866717F12E75009B498F /* Images.xcassets in Resources */,
 				328F865F17F12E75009B498F /* Main_iPhone.storyboard in Resources */,
@@ -270,6 +270,7 @@
 				328F865C17F12E75009B498F /* MMAppDelegate.m in Sources */,
 				328F866517F12E75009B498F /* MMViewController.m in Sources */,
 				32C8E53B17F69DD500327FE3 /* MMSessionManager.m in Sources */,
+				320752E518C831CB00367806 /* MMResponseGenerator.m in Sources */,
 				328F865817F12E75009B498F /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -407,10 +408,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MirrorMirror/MirrorMirror-Prefix.pch";
 				INFOPLIST_FILE = "MirrorMirror/MirrorMirror-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -420,10 +424,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MirrorMirror/MirrorMirror-Prefix.pch";
 				INFOPLIST_FILE = "MirrorMirror/MirrorMirror-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

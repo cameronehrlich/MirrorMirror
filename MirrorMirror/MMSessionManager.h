@@ -13,10 +13,20 @@
 
 #define DegreesToRadians(degrees) degrees * M_PI / 180
 
+@protocol MMSessionManagerDelegate
+
+-(void)didStartDetectingFace;
+-(void)didStopDetectingFace;
+
+@end
+
+
 @interface MMSessionManager : NSObject<AVCaptureVideoDataOutputSampleBufferDelegate>
 
-@property (nonatomic, weak)     UIView *previewView;
+@property (nonatomic, assign) id<MMSessionManagerDelegate>delegate;
+@property (nonatomic, assign) BOOL isDetectingFace;
 
+@property (nonatomic, weak)     UIView *previewView;
 @property (nonatomic, strong)   AVCaptureSession *session;
 @property (nonatomic, strong)   AVCaptureVideoPreviewLayer *previewLayer;
 

@@ -12,13 +12,21 @@
 #define kSessionPreset AVCaptureSessionPreset640x480
 #define kDetectorAccuracy CIDetectorAccuracyLow
 
-@implementation MMSessionManager{
+#define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
+#define UIColorFromRGBWithAlpha(rgbValue,a) [UIColor \
+colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 \
+green:((float)((rgbValue & 0xFF00) >> 8))/255.0 \
+blue:((float)(rgbValue & 0xFF))/255.0 alpha:a]
+
+@implementation MMSessionManager
+{
     CAShapeLayer *faceLayer;
     CAShapeLayer *rightEyeLayer;
     CAShapeLayer *leftEyeLayer;
     CAShapeLayer *mouthLayer;
     
-    
+    UIColor *openColor;
+    UIColor *closedColor;
 }
 
 -(instancetype) initWithView:(UIView *) previewView;
@@ -30,7 +38,9 @@
         
         [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
         self.faceDetector = [CIDetector detectorOfType:CIDetectorTypeFace context:nil options:@{CIDetectorAccuracy: kDetectorAccuracy}];
-
+        
+        openColor = UIColorFromRGBWithAlpha(0x00fff0, 0.5);
+        closedColor = UIColorFromRGBWithAlpha(0x0066ff, 0.5);
         
         [self setupSession];
     }
@@ -229,14 +239,14 @@
 	CMFormatDescriptionRef fdesc = CMSampleBufferGetFormatDescription(sampleBuffer);
 	CGRect cleanAperture = CMVideoFormatDescriptionGetCleanAperture(fdesc, false /*originIsTopLeft == false*/);
     
-
+    
     NSArray *faceFeatures = [self.faceDetector featuresInImage:ciImage options:imageOptions];
-
+    
     dispatch_async(dispatch_get_main_queue(), ^(void) {
         [self drawFaces:faceFeatures forVideoBox:cleanAperture orientation:curDeviceOrientation];
     });
     
-
+    
 }
 
 // called asynchronously as the capture output is capturing sample buffers, this method asks the face detector
@@ -245,12 +255,23 @@
 {
     
     if ( features.count == 0 ) {
+        if (self.isDetectingFace) {
+            [self.delegate didStopDetectingFace];
+            self.isDetectingFace = NO;
+        }
+
         [faceLayer removeFromSuperlayer];
         [rightEyeLayer removeFromSuperlayer];
         [leftEyeLayer removeFromSuperlayer];
         [mouthLayer removeFromSuperlayer];
         faceLayer = rightEyeLayer = leftEyeLayer = mouthLayer = nil;
         return;
+    }else{
+        if (!self.isDetectingFace) {
+            [self.delegate didStartDetectingFace];
+            [self setIsDetectingFace:YES];
+        }
+
     }
     
 	CGSize parentFrameSize = [self.previewView frame].size;
@@ -261,8 +282,6 @@
     CGFloat heightScaleBy = previewBox.size.height / clearAperture.size.width;
     
     if (!faceLayer || !rightEyeLayer || !leftEyeLayer || !mouthLayer) {
-        
-        NSLog(@"Created sublayers");
         
         // face
         faceLayer = [CAShapeLayer layer];
@@ -286,27 +305,33 @@
 		// the feature box originates in the bottom left of the video frame.
 		// (Bottom right if mirroring is turned on)
         
-		// face
+        
+        
+        
+        
         CGRect faceRect = [ff bounds];
-		CGFloat temp = faceRect.size.width;
-		faceRect.size.width = faceRect.size.height;
-		faceRect.size.height = temp;
-		temp = faceRect.origin.x;
-		faceRect.origin.x = faceRect.origin.y;
-		faceRect.origin.y = temp;
-		faceRect.size.width *= widthScaleBy;
-		faceRect.size.height *= heightScaleBy;
-		faceRect.origin.x *= widthScaleBy;
-		faceRect.origin.y *= heightScaleBy;
+        CGFloat temp = faceRect.size.width;
         
-        faceRect = CGRectOffset(faceRect, previewBox.origin.x + previewBox.size.width - faceRect.size.width - (faceRect.origin.x * 2), previewBox.origin.y);
-        
-        //face
-        UIBezierPath *bPath = [UIBezierPath bezierPathWithOvalInRect:faceRect];
-        [faceLayer setPath:[bPath CGPath]];
-        [faceLayer setAffineTransform:CGAffineTransformMakeRotation(DegreesToRadians(0))];
-        [faceLayer setFillColor:[[UIColor colorWithRed:.2 green:.2 blue:.2 alpha:.2] CGColor]];
-        
+        if (false) {             //disabling round light gray curcle
+            // face
+            faceRect.size.width = faceRect.size.height;
+            faceRect.size.height = temp;
+            temp = faceRect.origin.x;
+            faceRect.origin.x = faceRect.origin.y;
+            faceRect.origin.y = temp;
+            faceRect.size.width *= widthScaleBy;
+            faceRect.size.height *= heightScaleBy;
+            faceRect.origin.x *= widthScaleBy;
+            faceRect.origin.y *= heightScaleBy;
+            
+            faceRect = CGRectOffset(faceRect, previewBox.origin.x + previewBox.size.width - faceRect.size.width - (faceRect.origin.x * 2), previewBox.origin.y);
+            
+            //face
+            UIBezierPath *bPath = [UIBezierPath bezierPathWithOvalInRect:faceRect];
+            [faceLayer setPath:[bPath CGPath]];
+            [faceLayer setAffineTransform:CGAffineTransformMakeRotation(DegreesToRadians(0))];
+            [faceLayer setFillColor:[[UIColor colorWithRed:.2 green:.2 blue:.2 alpha:.2] CGColor]];
+        }
         
         if ([ff hasRightEyePosition]) {
             // right eye
@@ -321,19 +346,19 @@
             rightEyePoint.x += previewBox.origin.x + previewBox.size.width  - (rightEyePoint.x * 2);
             rightEyePoint.y += previewBox.origin.y;
             
-            UIBezierPath *rightEyePath = [UIBezierPath bezierPathWithArcCenter:rightEyePoint radius:20 startAngle:0 endAngle:DegreesToRadians(360) clockwise:YES];
+            UIBezierPath *rightEyePath = [UIBezierPath bezierPathWithArcCenter:rightEyePoint radius:15 startAngle:0 endAngle:DegreesToRadians(360) clockwise:YES];
             [rightEyeLayer setPath:rightEyePath.CGPath];
             [rightEyeLayer setAffineTransform:CGAffineTransformMakeRotation(DegreesToRadians(0))];
             
             if ([ff rightEyeClosed]) {
-                [rightEyeLayer setFillColor:[UIColor colorWithRed:.5 green:.5 blue:0 alpha:.5].CGColor];
+                [rightEyeLayer setFillColor:closedColor.CGColor];
             }else {
                 
-                [rightEyeLayer setFillColor:[UIColor colorWithRed:0 green:1 blue:.0 alpha:.5].CGColor];
+                [rightEyeLayer setFillColor:openColor.CGColor];
             }
         }
         
-
+        
         
         if ([ff hasLeftEyePosition]) {
             // left eye
@@ -349,18 +374,18 @@
             leftEyePoint.y += previewBox.origin.y;
             
             //left
-            UIBezierPath *leftEyePath = [UIBezierPath bezierPathWithArcCenter:leftEyePoint radius:20 startAngle:0 endAngle:DegreesToRadians(360) clockwise:YES];
+            UIBezierPath *leftEyePath = [UIBezierPath bezierPathWithArcCenter:leftEyePoint radius:15 startAngle:0 endAngle:DegreesToRadians(360) clockwise:YES];
             [leftEyeLayer setPath:leftEyePath.CGPath];
             [leftEyeLayer setAffineTransform:CGAffineTransformMakeRotation(DegreesToRadians(0))];
             
             if ([ff leftEyeClosed]) {
-                [leftEyeLayer setFillColor:[UIColor colorWithRed:.5 green:.5 blue:0 alpha:.5].CGColor];
+                [leftEyeLayer setFillColor:closedColor.CGColor];
             }else {
                 
-                [leftEyeLayer setFillColor:[UIColor colorWithRed:0 green:1 blue:.0 alpha:.5].CGColor];
+                [leftEyeLayer setFillColor:openColor.CGColor];
             }
         }
-
+        
         
         if ([ff hasMouthPosition]) {
             // mouth
@@ -380,10 +405,10 @@
             [mouthLayer setPath:mouthPath.CGPath];
             [mouthLayer setAffineTransform:CGAffineTransformMakeRotation(DegreesToRadians(0))];
             if ([ff hasSmile]) {
-                [mouthLayer setFillColor:[UIColor colorWithRed:.5 green:.5 blue:0 alpha:.5].CGColor];
+                [mouthLayer setFillColor:openColor.CGColor];
             }else {
                 
-                [mouthLayer setFillColor:[UIColor colorWithRed:0 green:1 blue:.0 alpha:.5].CGColor];
+                [mouthLayer setFillColor:closedColor.CGColor];
             }
         }
         
@@ -419,7 +444,7 @@
     if (error) {
         NSLog(@"Device input error: %@", error.localizedDescription);
     }
-
+    
     // add the input to the session
     if ([self.session canAddInput:deviceInput]) {
         [self.session addInput:deviceInput];
@@ -427,7 +452,7 @@
         [self.session removeInput:[self.session.inputs lastObject]];
         [self.session addInput:deviceInput];
     }
-
+    
 }
 
 @end

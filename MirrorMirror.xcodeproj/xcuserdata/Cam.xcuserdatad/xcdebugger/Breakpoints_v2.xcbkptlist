@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MirrorMirror/MMSessionManager.m"
-            timestampString = "402052783.083168"
+            timestampString = "415772157.320386"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "410"
-            endingLineNumber = "410"
+            startingLineNumber = "435"
+            endingLineNumber = "435"
             landmarkName = "-switchCamera"
             landmarkType = "5">
          </BreakpointContent>
